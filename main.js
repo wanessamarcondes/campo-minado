@@ -35,84 +35,96 @@ function getAdjacentCellIndexes(x, y) {
     });
 }
 
-var field_matrix = [];
-var field = $("#field table");
-for (var i = 0; i < HEIGHT; i++) {
-    var row_vector = [];
-    var row = $("<tr>");
-    for (var j = 0; j < WIDTH; j++) {
-        var cell = $("<td>");
-        cell.data("mines", 0);
+$("#reset").click(function() {
+    clearInterval(TIMER);
+    TIMER = false;
+    $(this).removeClass("game-over winner wow");
+    $("#mines").text("");
+    $("#timer").text("");
+    minesweeper();
+})
 
-        var button = $("<div>");
-        button.addClass("button");
-        button.data("coordinates", [j, i]);
+function minesweeper(){
+    var field_matrix = [];
+    var field = $("#field table");
+    for (var i = 0; i < HEIGHT; i++) {
+        var row_vector = [];
+        var row = $("<tr>");
+        for (var j = 0; j < WIDTH; j++) {
+            var cell = $("<td>");
+            cell.data("mines", 0);
 
-        button.contextmenu(function () {
-            return false;
-        });
+            var button = $("<div>");
+            button.addClass("button");
+            button.data("coordinates", [j, i]);
 
-        button.mousedown(function(event) {
-            if (!TIMER) {
-                TIMER = setInterval(function () {
-                    counter++;
-                    $("#timer").text(counter);
-                }, 1000);
-            }
-            if (event.which === 3) {
-                $(this).toggleClass("red-flag");
-                $("#mines").text($(".red-flag").length);
-            } else {
-                $("#reset").addClass("wow");
-            }
-        });
+            button.contextmenu(function () {
+                return false;
+            });
 
-        button.mouseup(function () {
-            $("#reset").removeClass("wow");
-            if (!$(this).hasClass("red-flag")) {
-                if ($(this).parent().hasClass("mine")) {
-                    $("td .button").each(function (index, button) {
-                        button.remove();
-                    })
-                    $("#reset").addClass("game-over");
-                    clearInterval(TIMER);
-                } else if ($(this).parent().data("mines") > 0) {
-                    $(this).remove();
-                } else if ($(this).parent().data("mines") === 0) {
-                    var coordinates = $(this).data("coordinates");
-                    $(this).remove();
-                    (function (x, y) {
-                        var adjacent_cells = getAdjacentCellIndexes(x, y);
-                        for (var k = 0; k < adjacent_cells.length; k++) {
-                            var x = adjacent_cells[k][0];
-                            var y = adjacent_cells[k][1];
-                            var cell = $(field_matrix[y][x]);
-                            var button = cell.children($(".button"));
-                            if (button.length > 0) {
-                                button.remove();
-                                if (cell.data("mines") === 0) {
-                                    arguments.callee(x, y);
+            counter = 0;
+            button.mousedown(function(event) {
+                if (!TIMER) {
+                    TIMER = setInterval(function () {
+                        counter++;
+                        $("#timer").text(counter);
+                    }, 1000);
+                }
+                if (event.which === 3) {
+                    $(this).toggleClass("red-flag");
+                    $("#mines").text($(".red-flag").length);
+                } else {
+                    $("#reset").addClass("wow");
+                }
+            });
+
+            button.mouseup(function () {
+                $("#reset").removeClass("wow");
+                if (!$(this).hasClass("red-flag")) {
+                    if ($(this).parent().hasClass("mine")) {
+                        $("td .button").each(function (index, button) {
+                            button.remove();
+                        })
+                        $("#reset").addClass("game-over");
+                        clearInterval(TIMER);
+                    } else if ($(this).parent().data("mines") > 0) {
+                        $(this).remove();
+                    } else if ($(this).parent().data("mines") === 0) {
+                        var coordinates = $(this).data("coordinates");
+                        $(this).remove();
+                        (function (x, y) {
+                            var adjacent_cells = getAdjacentCellIndexes(x, y);
+                            for (var k = 0; k < adjacent_cells.length; k++) {
+                                var x = adjacent_cells[k][0];
+                                var y = adjacent_cells[k][1];
+                                var cell = $(field_matrix[y][x]);
+                                var button = cell.children($(".button"));
+                                if (button.length > 0) {
+                                    button.remove();
+                                    if (cell.data("mines") === 0) {
+                                        arguments.callee(x, y);
+                                    }
                                 }
                             }
-                        }
-                    })(coordinates[0], coordinates[1]);
+                        })(coordinates[0], coordinates[1]);
+                    }
+
+                    if ($("td .button").length === MINES) {
+                        $("#reset").addClass("winner");
+                        clearInterval(TIMER);
+                    }
+
                 }
+            })
 
-                if ($("td .button").length === MINES) {
-                    $("#reset").addClass("winner");
-                    clearInterval(TIMER);
-                }
+            cell.append(button);
 
-            }
-        })
-
-        cell.append(button);
-
-        row.append(cell);
-        row_vector.push(cell)
+            row.append(cell);
+            row_vector.push(cell)
+        }
+        field.append(row);
+        field_matrix.push(row_vector);
     }
-    field.append(row);
-    field_matrix.push(row_vector);
 }
 
 var mine_indexes = getUniqueRandomIndexesInField(field_matrix);
