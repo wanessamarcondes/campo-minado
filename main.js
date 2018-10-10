@@ -36,13 +36,12 @@ function getAdjacentCellIndexes(x, y) {
 }
 
 $("#reset").click(function(){
+    $("#field table").empty();
     clearInterval(TIMER);
     TIMER = false;
-    $(this).removeClass("game-over winner wow");
-    $("#mines").text("");
-    $("#timer").text("");
-    $("#field table").empty();
+    $("#mines, #timer").text("");
     minesweeper();
+    $(this).removeClass("game-over winner wow");
 })
 
 function minesweeper(){
