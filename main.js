@@ -3,6 +3,22 @@ HEIGHT = 20;
 WIDTH = 15;
 TIMER = false;
 
+// iniciante 10 bombas 8x8
+// intermediario 40 bombas 16x16
+// avançado 90 bombas 24x24
+
+$("a").click(function(e){
+    e.preventDefault();
+})
+
+$(".window-controls__game").mouseover(function(e){
+    $('#dropdownContent').show();
+});
+
+$(".window-dropdown").mouseleave(function(e) {
+    $('#dropdownContent').hide();
+});
+
 function getUniqueRandomIndexesInField(table, indexes) {
     indexes = indexes ? indexes : [];
     for (var i = indexes.length; i < MINES; i++) {

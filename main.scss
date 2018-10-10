@@ -57,7 +57,7 @@ body {
     width: 480px;
     font-size: 14px;
 
-    .window-header {
+    &-header {
         background-color: $windows-blue;
         font-weight: bold;
         padding: 5px;
@@ -67,7 +67,7 @@ body {
         }
     }
 
-    .window-controls {
+    &-controls {
         padding: 10px 5px;
 
         a {
@@ -80,6 +80,19 @@ body {
                 color: white;
             }
         }
+
+        li {
+            list-style: none;
+        }
+    }
+
+    &-dropdown {
+        display: none;
+        position: absolute;
+        background-color: #e9e0e0;
+        min-width: 100px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 99;
     }
 }
 
