@@ -19,6 +19,33 @@ $(".window-dropdown").mouseleave(function(e) {
     $('#dropdownContent').hide();
 });
 
+$("#iniciante").mousedown(function(){
+    MINES = 10;
+    HEIGHT = 8;
+    WIDTH = 8;
+    $(".window").css("width", "267px");
+    functionReset();
+    minesweeper();
+})
+
+$("#intermediario").mousedown(function(){
+    MINES = 40;
+    HEIGHT = 16;
+    WIDTH = 16;
+    $(".window").css("width", "480px");
+    functionReset();
+    minesweeper();
+})
+
+$("#avancado").mousedown(function(){
+    MINES = 90;
+    HEIGHT = 24;
+    WIDTH = 24;
+    $(".window").css("width", "746px");
+    functionReset();
+    minesweeper();
+})
+
 function getUniqueRandomIndexesInField(table, indexes) {
     indexes = indexes ? indexes : [];
     for (var i = indexes.length; i < MINES; i++) {
@@ -51,13 +78,17 @@ function getAdjacentCellIndexes(x, y) {
     });
 }
 
-$("#reset").click(function(){
+function functionReset(){
     $("#field table").empty();
     clearInterval(TIMER);
     TIMER = false;
     $("#mines, #timer").text("");
-    minesweeper();
     $(this).removeClass("game-over winner wow");
+    minesweeper();
+}
+
+var reset = $("#reset").mousedown(function(){
+    functionReset();
 })
 
 function minesweeper(){
